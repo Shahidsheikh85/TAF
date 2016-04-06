@@ -1,11 +1,17 @@
 package config;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static executionEngine.ExecuteTestScript.OR;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
@@ -13,6 +19,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -23,10 +30,14 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+
 import org.openqa.selenium.TakesScreenshot;
+
 
 import utility.Log;
 import executionEngine.ExecuteTestScript;
+
 
 public class ActionKeywords {
 
@@ -36,8 +47,10 @@ public class ActionKeywords {
 	public static JavascriptExecutor js;
 	public static Actions action;
 
-	public static WebDriverWait wait;
 
+
+	public static WebDriverWait wait;
+//	private static File targetFile;
 
 
 	//----------------------------------------------------------------??
@@ -55,15 +68,14 @@ public class ActionKeywords {
 				Log.info("Mozilla browser started");
 			}
 			else if(data.equals("IE")){
-				System.setProperty("webdriver.ie.driver", "C:\\Program Files\\Internet Explorer\\iexplore.exe");
+				System.setProperty("webdriver.ie.driver", "N:\\Documents\\TAF\\BUILDS\\IEDriverServer.exe");
 				driver=new InternetExplorerDriver();
 				driver.manage().window().maximize();
 				Log.info("IE browser started");
 				//log(LogStatus.INFO, "IE Started");
 			}
 			else if(data.equals("Chrome")){
-				
-				System.setProperty("webdriver.chrome.driver", "D:\\eclipse\\TAF\\TAF\\BUILDS\\chromedriver\\chromedriver.exe");
+				System.setProperty("webdriver.chrome.driver", ".\\TAF\\BUILDS\\chromedriver.exe");
 				driver=new ChromeDriver();
 				Log.info("Chrome browser started");
 			}
@@ -103,27 +115,23 @@ public class ActionKeywords {
 
 			if(data.equals("Testomgeving")){
 				Log.info("Navigating to test environment");
-				driver.getWindowHandle();
-				driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-				driver.get(Constants.URL);
-				Thread.sleep(1000);
-			}
-			else if(data.equals("Admin")){
+
 				// Switch to new window opened
 				for(String winHandle : driver.getWindowHandles()){
 					driver.switchTo().window(winHandle);
 				}
-				Log.info("Navigating to Admin environment");
-				driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-				driver.get(Constants.Admin);
-				Thread.sleep(1000);
-				driver.switchTo();				 			 
-			}
-			else if(data.equals("")){
-				Log.info("Navigating to test environment without value");
 				driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 				driver.get(Constants.URL);
 				Thread.sleep(1000);
+				driver.switchTo();				 			 
+			}
+			else if(!data.equals("Testomgeving")){
+				Log.info("Navigating folder: " + data +" on test environment" );
+				driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+				//After the choosen URL  
+				driver.get(Constants.URL +data);
+				Thread.sleep(1000);
+				driver.switchTo();	
 			}
 
 			//driver.get(Constants.Col_URL);
@@ -136,27 +144,29 @@ public class ActionKeywords {
 
 
 
-	public static void click(String object, String data){
+	public static void click(String object, String data) throws AWTException{
+
+		Robot robot = new Robot();
 		try{
-			
-			//wait.until(ExpectedConditions.elementToBeClickable(By.xpath(OR.getProperty(object))));
-			
-			if(data.equals("")){
-				waitForElementToBePresent(By.xpath(OR.getProperty(object)),5000);
-				System.out.println("Element " + object + " is visible");
 
-				//System.out.println("Element is Present" + data);
-
-				//
+			waitForElementToBePresent(By.xpath(OR.getProperty(object)),5000);
+			System.out.println("Element " + object + " is visible");
+			System.out.println("Element is Present" + data);
+			if(!data.equals("Javascript")){
+				driver.findElement(By.xpath(OR.getProperty(object))).isDisplayed();
 				Log.info("Clicking on Webelement "+ object);
 				System.out.println("Clicking on Webelement "+ object);
-				//String handles= driver.getWindowHandle();
-				//System.out.println(handles);
-				Thread.sleep(500);
+				String handles= driver.getWindowHandle();
+				System.out.println(handles);
+
+				//Pointer (mouse) position 
+				Point coordinates = driver.findElement(By.xpath(OR.getProperty(object))).getLocation();
+				robot.mouseMove(coordinates.getX()+5, coordinates.getY()+100);
+
 				driver.findElement(By.xpath(OR.getProperty(object))).click();
-				Thread.sleep(500);
+				Thread.sleep(1000);
 			}
-			else if(data.equals("Javascript")){
+			else {
 				//driver.findElement(By.xpath(OR.getProperty(object))).sendKeys(Keys.ENTER);
 				WebElement ele = driver.findElement(By.xpath(OR.getProperty(object)));
 				Actions action = new Actions(driver);
@@ -170,28 +180,28 @@ public class ActionKeywords {
 				}
 			 */
 
-		}catch (Exception e){
+		}
+		catch (Exception e){
 			Log.error("Not able to click --- " + e.getMessage());
 			ExecuteTestScript.bResult = false;
 		}
 	}
 
 
-	public static void linkText(String object, String data){
-		try{
-			driver.findElement(By.xpath("//*[contains(text(), '" + data + "')]")).click();
-		} catch(Exception e){
-			Log.error("Not able to click on LinkText --- " + e.getMessage());
-			ExecuteTestScript.bResult = false;
-		}
-	}
 
 	public static void input(String object, String data){
+
 		try{
 			wait = new WebDriverWait(driver, 15);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(OR.getProperty(object))));
 			Log.info("Entering the text in " + object);
-			driver.findElement(By.xpath(OR.getProperty(object))).sendKeys(data);
+			//Point coordinates = driver.findElement(By.xpath(OR.getProperty(object))).getLocation();
+			//robot.mouseMove(coordinates.getX(), coordinates.getY());
+
+			WebElement input = driver.findElement(By.xpath(OR.getProperty(object)));
+			input.clear();
+			input.sendKeys(data);
+
 			Thread.sleep(1500);
 		}catch(Exception e){
 			Log.error("Not able to Enter input --- " + e.getMessage());
@@ -265,6 +275,7 @@ public class ActionKeywords {
 			dropdown.selectByVisibleText(data);
 			Log.info("Text on dropdown selected is: " + data);
 			Thread.sleep(1000);
+
 		} catch (Exception e) {
 			Log.error("Not able to get Text ---" + e.getMessage());
 			ExecuteTestScript.bResult =false;
@@ -272,14 +283,17 @@ public class ActionKeywords {
 		}
 	}
 
+
+
 	public static void wysiwyg(String object, String data) throws Exception{
 		try{
 			String currentWindow = driver.getWindowHandle();
 
 
 			wait = new WebDriverWait(driver, 15);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("cke_wysiwyg_frame")));
+			//wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("cke_wysiwyg_frame")));
 			if (object.equals("iFrame_Body")){
+				System.out.println("execute iframe body");
 				WebElement editorFrame = driver.findElement(By.className("cke_wysiwyg_frame"));
 				driver.switchTo().frame(editorFrame);
 				String handles= driver.getWindowHandle();
@@ -291,8 +305,8 @@ public class ActionKeywords {
 				System.out.println("Enter text");
 				body.sendKeys(data);
 
-			} else if (object.equals("iFrame_Field")){
-				//WebElement editorFrame = driver.findElement(By.className("cke_wysiwyg_frame").tagName(""));
+			} else if (!object.equals("iFrame_Body")){
+
 				driver.switchTo().frame(1);
 				//System.out.println(editorFrame + " iframe is selected");
 				String handles= driver.getWindowHandle();
@@ -310,6 +324,22 @@ public class ActionKeywords {
 			Log.error("Not able to get Text ---" + e.getMessage());
 			ExecuteTestScript.bResult =false;
 		}
+	}
+
+	public static void checkbox (String object, String data) throws Exception{
+
+		try{
+
+			WebElement checkbox =driver.findElement(By.xpath("//label[contains(text(), '"+data+"')]/preceding-sibling::input[@type='checkbox']"));
+			Log.info("Checkbox found and selected");
+			checkbox.click();
+
+
+		}catch (Exception e){
+			Log.error("Not able to click checkbox ---" + e.getMessage());
+			ExecuteTestScript.bResult =false;
+		}
+
 	}
 
 	public static void hoover(String object, String data){
@@ -336,9 +366,14 @@ public class ActionKeywords {
 		try{
 			wait = new WebDriverWait(driver, 15);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(OR.getProperty(object))));
+
 			driver.findElement(By.xpath(OR.getProperty(object))).sendKeys(data);
 			Thread.sleep(3000);
 			driver.findElement(By.xpath(OR.getProperty(object))).sendKeys(Keys.ARROW_DOWN);
+
+			driver.findElement(By.xpath(OR.getProperty(object))).sendKeys(Keys.ENTER);
+			Thread.sleep(2000);
+
 		}catch (Exception e){
 			Log.error("Not able to click Text ---" + e.getMessage());
 			ExecuteTestScript.bResult =false;
@@ -353,8 +388,7 @@ public class ActionKeywords {
 			driver.switchTo().frame(driver.findElement(By.cssSelector("iframe[id='mediaBrowser']")));
 			System.out.println(data);
 			driver.findElement(By.name("files[upload]")).clear();
-			driver.findElement(By.name("files[upload]")).sendKeys("N:\\Documents\\TAF\\OLM\\src\\images\\"+data+".jpg");
-
+			driver.findElement(By.name("files[upload]")).sendKeys("N:\\Documents\\TAF\\STAAT\\src\\images\\" + data + ".jpg");
 		}catch (Exception e){
 			Log.error("Not able to get Text ---" + e.getMessage());
 			ExecuteTestScript.bResult =false;
@@ -373,15 +407,19 @@ public class ActionKeywords {
 
 	public static void switchScreen(String object, String data){
 		try{
+			Actions actions = new Actions(driver);
 			if (data.equals("")){
 				System.out.println("Switch to deafult frame");
 				Log.info("switch default frame");
 				driver.switchTo().defaultContent();
+				actions.keyUp(Keys.CONTROL).sendKeys(Keys.UP).perform();
+
 			}
 			else if(data.equals("frame")) {
 				System.out.println("Switch to field frame");
 				Log.info("Switch frames");
 				driver.switchTo().frame("field-frame");
+				actions.keyUp(Keys.CONTROL).sendKeys(Keys.UP).perform();
 			}
 		}catch(Exception e) {
 			Log.error("Not able to get Text ---" + e.getMessage());
@@ -401,14 +439,43 @@ public class ActionKeywords {
 		}
 	}
 
-
-	public static void takeScreenshot(WebDriver driver, String sTestScenaroID) throws Exception{
+	public static void Scroll(String object, String data) throws Exception{
+		Robot robot = new Robot();
 		try{
-			File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-			FileUtils.copyFile(scrFile, new File(Constants.Path_ScreenShot +  sTestScenaroID +".jpg"));	
-		} catch (Exception e){
-			Log.error("Class Utils | Method takeScreenshot | Exception occured while capturing ScreenShot : "+e.getMessage());
+			if(data.equals("DOWN")){
+				//actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+				robot.keyPress(KeyEvent.VK_PAGE_DOWN);
+				robot.keyRelease(KeyEvent.VK_PAGE_DOWN);
+			}
+			else if(data.equals("UP")){
+				robot.keyPress(KeyEvent.VK_PAGE_UP);
+				robot.keyRelease(KeyEvent.VK_PAGE_UP);
+
+				//actions.keyUp(Keys.CONTROL).sendKeys(Keys.PAGE_UP).perform();
+			}
+		}catch(Exception e) {
+			Log.error("Not able to get KEY PRESSED ---" + e.getMessage());
+			ExecuteTestScript.bResult =false;
 		}
+	}
+
+
+	public static File takeScreenshot() throws Exception{
+		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd/");
+		Calendar cal = Calendar.getInstance();
+
+		File screenshotDir = new File(Constants.Path_ScreenShot + "/"  
+				+ dateFormat.format(cal.getTime())
+				+ "/screenshots/");
+		screenshotDir.mkdirs();
+
+		File targetFile = new File(screenshotDir.getAbsolutePath() + "/" +
+				screenshotDir.listFiles().length  + "-iTestStep.png");	
+
+		FileUtils.copyFile(scrFile, targetFile);
+		return targetFile;
+
 	}
 
 

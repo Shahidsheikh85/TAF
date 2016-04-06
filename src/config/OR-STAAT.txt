@@ -1,0 +1,192 @@
+#Inloggen
+txtbx_Username=.//*[@id='edit-name']
+txtbx_Password=.//*[@id='edit-pass']
+btn_Submit=.//*[@id='edit-submit']
+title_Editor=.//*[@class='lead__title']
+btn_LogOut=.//*[text()= 'Uitloggen']
+
+txtbx_Username_D=.//html/body/form/table/tbody/tr[1]/td/table[1]/tbody/tr[1]/td[2]/input
+txtbx_Password_D=.//*[@name='Ecom_Password']
+btn_Submit_D=.//*[@class='submit']
+txtbx_Title=.//*[@id='edit-title']
+drpdwn_Moderation=.//*[@id='edit-workbench-moderation-state-new']
+
+
+#MENU
+btn_Inhoud=.//*[@id='admin-menu-menu']/li[1]/a
+btn_InhoudToevoegen=.//*[@id='content']/ul/li/a
+btn_Basispagina=.//a[text()= 'Basispagina']
+btn_Blok=.//a[text()= 'Blok']
+btn_Grafiek=.//a[text()= 'Grafiek']
+btn_Kaart=.//a[text()= 'Kaart']
+btn_Kerncijfer=.//a[text()= 'Kerncijfer']
+btn_Landingspagina=.//a[text()= 'Landingspagina']
+btn_Webformulier=.//a[text()= 'Webformulier']
+
+
+
+#FrontPage
+btn_Logo=.//*[@class='logotype']
+
+##Blokken
+Block_Thema=.//a[(@class='home-block-link') and contains(., 'thema')]
+Block_Levensfase=.//a[(@class='home-block-link') and contains(., 'levensfase')]
+Block_Alfabetisch=.//a[(@class='home-block-link') and contains(., 'Alfabetisch')]
+Block_DirectTo=.//a[@class='direct-to-link']
+
+#Footer
+lnk_Contact=.//*[@id='block-menu-menu-servicemenu--2']/ul/li[1]/a
+lnk_Disclaimer=.//*[@id='block-menu-menu-servicemenu--2']/ul/li[2]/a
+
+#MainMenu
+btn_Menu=.//*[@id='menu-button']
+btn_Home=.//a[text()= 'Home']
+btn_Kerncijfers=.//a[text()= 'Kerncijfers']
+btn_FinMiddelen=.//a[text()= 'Financiële middelen']
+btn_Samenvatting=.//a[text()= 'Samenvatting']
+btn_Publicaties=.//a[text()= 'Publicaties']
+btn_OverStaat=.//a[text()= 'Over de Staat']
+
+#Search
+txtbx_Search_Kern=.//*[@id='edit-searchkeyfigures']
+btn_Search_Kern=.//input[@id='edit-submit-ds-kernvragen-search']
+
+
+#ServiceMenu
+ServiceMenu=.//div/div/header/nav
+btn_Contant_Menu=.//div/div/header/nav/ul/li[1]/a
+btn_Disclaimer_Menu=.//div/div/header/nav/ul/li[2]/a
+
+_____________________________________________________________________________________________
+
+#Grafiek aanmaken
+txtbx_TitelMenuTab=.//*[contains(@name,'field_menu_tab_title')]
+txtbx_TitelGrafiek=.//*[@id='edit-title']
+txtbx_Redac_Titel=.//*[contains(@name,'field_descriptive_title')]
+	
+	
+#Beschrijving:
+txtbx_Subtitel=.//input[contains(@id, 'edit-field-graph')]
+	
+	#Dataset:
+	txtbx_oData=.//input[contains(@id, 'edit-field-odata-url')]
+	
+	btn_transf_nvt=.//*[@id='edit-field-transform-data-und-none']
+	btn_transf_Ja=.//*[@id='edit-field-transform-data-und-ja']
+	btn_transf_Nee=.//*[@id='edit-field-transform-data-und-nee']
+	
+	btn_period_nvt=.//*[@id='edit-field-import-last-period-und-none']
+	btn_period_Ja=.//*[@id='edit-field-import-last-period-und-ja']
+	btn_period_Nee=.//*[@id='edit-field-import-last-period-und-nee']
+	
+	##Weergave opties
+	btn_Kolom=.//*[@id='edit-field-graph-type-und-column']
+	btn_Staaf=.//*[@id='edit-field-graph-type-und-bar']
+	btn_Lijn=.//*[@id='edit-field-graph-type-und-line']
+	btn_Taart=.//*[@id='edit-field-graph-type-und-pie']
+	
+	drpdwn_Stapeling=.//*[@id='edit-field-graph-stacking-und']
+	drpdwn_Kleurenpalet=.//*[@id='edit-field-graph-colors-und']
+	txtbx_LabelX_As=.//input[contains(@id, 'edit-field-graph-x-axis-title')]
+	optn_X-Categorien=.//*[@id='edit-field-graph-x-axis-type-und-category']
+	optn_X-Jaren=.//*[@id='edit-field-graph-x-axis-type-und-year']
+	optn_X-Numeriek=.//*[@id='edit-field-graph-x-axis-type-und-linear']
+
+	
+	txtbx_Y-Label=.//input[contains(@id, 'edit-field-graph-y-axis-title')]
+	
+	txtbx_Decimalen=.//input[contains(@id, 'edit-field-graph-tooltip-decimals')]
+											edit-field-graph-y-axis-sec-decimals-und-0-value
+	
+	drpdwn_GrafiekType=.//*[@id='edit-field-graph-series-configuration-und-0-field-graph-series-type-und']
+	drpdwn_LijnStijl=.//*[@id='edit-field-graph-series-configuration-und-0-field-graph-series-dash-style-und']
+	drpdwn_Weergave=.//*[@id='edit-field-graph-series-configuration-und-0-field-graph-series-display-und']
+
+#OPSLAAN(Kan ook gebruikt worden op alle andere pagina's)
+btn_Opslaan=.//*[@id='edit-submit']
+btn_Publicatie=.//*[text()= 'Publicatie-opties']
+optn_Gepubliceerd=.//*[@id='edit-status']
+optn_Aangeraden=.//*[@id='edit-promote']
+optn_Vastgeplakt=.//*[@id='edit-sticky']
+
+#Kaart aanmaken
+txtbx_TitelTab=.//input[contains(@id,'edit-field-menu-tab-title')]
+txtbx_Kernboodschap=.//textarea[contains(@id, 'edit-field-graph-coremessage')]
+
+
+	#Beschrijving
+	##Subtitel
+	##txtbx iframe
+	
+	#Dataset
+	txtbx_Bladeren=.//input[contains(@id, 'edit-field-map-image-und') and contains (@type, 'file')]
+	btn_Uploaden=.//*[text()= 'Uploaden']
+
+	txtbx_MoreInfo_URL=.//input[contains(@id,'edit-field-graph-more-info') and contains(@name, 'value')]
+	txtbx_MoreInfo_Titel=.//input[contains(@id,'edit-field-graph-more-info') and contains(@name, 'title')]
+
+	txtbx_PublicatieDatum=.//input[contains(@id,'edit-field-graph-publicationdate')]
+	txtbx_UpdatFreq=.//input[contains(@id,'edit-field-graph-measurefrequency')]
+	
+	btn_InfoToevoegen=.//*[contains(@name, 'more_info_add_more')]
+
+
+
+
+#Kerncijfers aanmaken
+tab_GrafiekenEnKaarten=.//strong[text()= 'Grafieken en kaarten']
+tab_Gegevens=.//strong[text()= 'Gegevens']
+tab_Metadata=.//Strong[text()= 'Metadata']
+tab_Taxonomieen=.//strong[text()= 'Taxonomieën']
+tab_Beschrijving=.//Strong[text()= 'Beschrijving']
+tab_Dataset=.//Strong[text()= 'Dataset']
+tab_Weergave=.//Strong[(text()= 'Weergave opties')]
+tab_Geavanceerde=.//Strong[text()= 'Geavanceerde opties']
+
+
+
+	##TAB Grafieken
+	txtbx_ActueleCijfers=.//input[contains(@id,'edit-field-actuele-cijfers-und-0')]
+	txtbx_ActueleCijfers1=.//input[contains(@id,'edit-field-actuele-cijfers-und-1')]
+	btn_ActueleCijfersToevoegen=.//*[@id='edit-field-actuele-cijfers-und-add-more']
+	
+	txtbx_Trends=.//input[contains(@id,'edit-field-trends-und-0')]
+	txtbx_Trends1=.//input[contains(@id,'edit-field-trends-und-1')]
+	btn_TrendsToevoegen=.//*[@id='edit-field-trends-und-add-more']
+	
+	txtbx_Regionaal=.//input[contains(@id,'edit-field-regionaal-internationaal-und-0')]
+	txtbx_Regionaal1=.//input[contains(@id,'edit-field-regionaal-internationaal-und-1')]
+	btn_RegionaalToevoegen=.//*[@id='edit-field-regionaal-internationaal-und-add-more']
+	
+	
+	##TAB Gegevens
+	txtbx_DATA_URL=.//*[@id='edit-field-kerncijfer-odata-url-und-0-value']
+	txtbx_Decimalen=.//*[@id='edit-field-decimalen-und-0-value']
+	optn_VoorlopiCijfer=.//*[@id='edit-field-preliminary-und']
+	txtbx_Eenheid=.//*[@id='edit-field-eenheid-und-0-value']
+	
+	##TAB Metadata
+	txtbx_Kernzin=.//*[@id='edit-field-kernzin-und-0-value']
+	txtbx_Bron=.//*[@id='edit-field-bron-und-0-value']
+	txtbx_LabelPeildatum=.//*[@id='edit-field-labelpeildatum-und-0-value']
+	txtbx_Peildatum=.//*[@id='edit-field-peildatum-und-0-value']
+	
+	drpdwn_Bron=.//*[@id='edit-field-graph-sources-und-0-format--2']
+	txtbx_BronGraf=.//textarea[contains(@id,'edit-field-graph-sources-und')]
+	
+
+
+###########################################################################
+
+
+##Mediatoevoegen
+btn_Browse=.//*[contains(@id, 'edit-field')and contains(text(), 'Bladeren')]
+btn_Bibliotheek=.//*[text()= 'Bibliotheek']
+btn_Upload=.//*[@name='files[upload]']
+btn_Next=.//*[@id='edit-next']
+txtbx_AltText=.//*[@id='edit-field-file-image-alt-text-und-0-value']
+txtbx_TitleText=.//*[@id='edit-field-file-image-title-text-und-0-value']
+btn_OpslaanBrowse=.//*[@id='media-tab-upload']/form/div/div[4]/input[contains(@id, 'edit-submit')]
+
+
+

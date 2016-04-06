@@ -1,6 +1,8 @@
 package executionEngine;
 
+import java.io.File;
 import java.io.FileInputStream;
+
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -8,7 +10,6 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.apache.log4j.xml.DOMConfigurator;
-
 import com.relevantcodes.extentreports.DisplayOrder;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
@@ -17,8 +18,8 @@ import com.relevantcodes.extentreports.LogStatus;
 import config.ActionKeywords;
 import config.Constants;
 import utility.ExcelUtilis;
-
 import utility.Log;
+//import utility.SendMail;
 
 
 public class ExecuteTestScript {
@@ -29,6 +30,7 @@ public class ExecuteTestScript {
 	public static Method method[];
 
 	public static int iTestStep;
+	public static File targetFile;
 	public static int iTestLastStep;
 	public static String sTestScenario;
 	public static String sTestScenaroID;
@@ -52,14 +54,13 @@ public class ExecuteTestScript {
 		ExcelUtilis.duplicateExcelFile(Constants.Path_TestDataCopy); 
 		ExcelUtilis.setExcelFile(Constants.Path_TestData);
 		DOMConfigurator.configure("log4j.xml");
-		
-		
+
 		String Path_OR = Constants.Path_OR;
 		FileInputStream fs = new FileInputStream(Path_OR);
 		OR= new Properties(System.getProperties());
 		OR.load(fs);
 		DateFormat format = new SimpleDateFormat("ddMMYY_HHmm");
-		extent  = new ExtentReports(Constants.Path_Report+ "RIVM_Rapport_" + format.format(new Date()) + ".html", false, DisplayOrder.NEWEST_FIRST);
+		extent  = new ExtentReports(Constants.Path_Report+ "RIVM_Rapport_" + format.format(new Date()) + ".html", false, DisplayOrder.OLDEST_FIRST);
 		ExecuteTestScript startEngine = new ExecuteTestScript();
 		startEngine.execute_TestCase();
 	}
@@ -89,8 +90,6 @@ public class ExecuteTestScript {
 					System.out.println("Executing row " + iTestStep);
 					if(bResult==false){
 						ExcelUtilis.setCellData(Constants.KEYWORD_FAIL,iTestcase,Constants.Col_Result,Constants.Sheet_TestCases);
-						String img = test.addScreenCapture(Constants.Path_ScreenShots +  sTestCaseID +".jpg");
-						test.log(LogStatus.INFO, "Screenshot below : " + img );  
 						Log.endTestCase(sTestCaseID);
 						extent.endTest(test);
 						extent.flush();
@@ -105,10 +104,11 @@ public class ExecuteTestScript {
 					extent.endTest(test);
 					System.out.println("Teststep " + sTestCaseID + " successfully executed");
 					extent.flush();
-					
+
 				}					
 			}
 		}
+		//SendMail.execute(Constants.Path_Report);
 	}	
 
 	private static void execute_Actions() throws Exception {
@@ -118,25 +118,37 @@ public class ExecuteTestScript {
 			if(method[i].getName().equals(sActionKeyword)){
 				method[i].invoke(actionKeywords,sPageObject, sData);
 				if(bResult==true){
-					ExcelUtilis.setCellData(Constants.KEYWORD_PASS, iTestStep, Constants.Col_TestStepResult, Constants.Sheet_TestSteps);	
-					sTestScenario = ExcelUtilis.getCellData(iTestStep, Constants.Col_TestScenarioID, Constants.Sheet_TestSteps);
-					test.log(LogStatus.PASS, sDescription);
-					String img = test.addScreenCapture(sTestScenario+".jpg");
-					test.log(LogStatus.INFO, "Screenshot below : " + img );
-					
-					break;
+					if(sDescription.equals("")){
+						ExcelUtilis.setCellData(Constants.KEYWORD_PASS, iTestStep, Constants.Col_TestStepResult, Constants.Sheet_TestSteps);	
+						//String img = test.addScreenCapture(Constants.Path_ScreenShot + iTestStep + ".png" );
+						//test.log(LogStatus.INFO, "Screenshot below : " + test.addScreenCapture(Constants.Path_ScreenShot + iTestStep +".jpeg"));  
+
+						break;		
+					}else{
+						ExcelUtilis.setCellData(Constants.KEYWORD_PASS, iTestStep, Constants.Col_TestStepResult, Constants.Sheet_TestSteps);	
+						test.log(LogStatus.PASS, sDescription + " " + sData);
+						if(sData.equals("screenShot")){
+							test.log(LogStatus.INFO, "Schermafbeelding : " + test.addScreenCapture(ActionKeywords.takeScreenshot().getAbsolutePath()));
+						}
+						break;
+					}
 				}else{
-					ExcelUtilis.setCellData(Constants.KEYWORD_FAIL, iTestStep, Constants.Col_TestStepResult, Constants.Sheet_TestSteps);
-					sTestScenario = ExcelUtilis.getCellData(iTestStep, Constants.Col_TestScenarioID, Constants.Sheet_TestSteps);
-					ActionKeywords.takeScreenshot(ActionKeywords.driver, sTestScenario);
-					test.log(LogStatus.FAIL, "FAIL" , sDescription);
-				//	test.log(LogStatus.INFO, "Schermafbeelding : " + test.addScreenCapture("test1.png"));
-					ActionKeywords.closeBrowser("","");
-					break;
+
+					if(sTestCaseID.equals("Controleren_Files")){
+						ExcelUtilis.setCellData(Constants.KEYWORD_FAIL, iTestStep, Constants.Col_TestStepResult, Constants.Sheet_TestSteps);
+						//sTestScenario = ExcelUtilis.getCellData(iTestStep, Constants.Col_TestScenarioID, Constants.Sheet_TestSteps);
+						test.log(LogStatus.FAIL, "FAIL" , sDescription);
+						test.log(LogStatus.INFO, "Schermafbeelding : " + test.addScreenCapture(ActionKeywords.takeScreenshot().getAbsolutePath()));
+						continue;
+					}else{
+						ExcelUtilis.setCellData(Constants.KEYWORD_FAIL, iTestStep, Constants.Col_TestStepResult, Constants.Sheet_TestSteps);
+						test.log(LogStatus.FAIL, "FAIL" , sDescription);
+						test.log(LogStatus.INFO, "Schermafbeelding : " + test.addScreenCapture(ActionKeywords.takeScreenshot().getAbsolutePath()));
+						ActionKeywords.closeBrowser("","");
+						break;	
+					}	
 				}
 			}
 		}
 	}
-	
-
 }
