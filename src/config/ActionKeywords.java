@@ -48,6 +48,7 @@ public class ActionKeywords {
 	public static Actions action;
 
 
+	//Testen nieuwe functies;
 
 	public static WebDriverWait wait;
 //	private static File targetFile;
